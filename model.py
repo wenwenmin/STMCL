@@ -133,7 +133,7 @@ class ProjectionHead(nn.Module):
 
 
 
-class STco(nn.Module):
+class STMCL(nn.Module):
     def __init__(self, temperature, image_embedding, spot_embedding, projection_dim, dropout=0., lamda=0.5):
         super().__init__()
         self.x_embed = nn.Embedding(128, spot_embedding)
