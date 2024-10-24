@@ -2,15 +2,15 @@ import argparse
 import torch
 import os
 import torch.nn.functional as F
-from dataset import SKIN, HERDataset, DATA_BRAIN, Mouse_Spleen, TenxDataset
-from model import STco
+from dataset import SKIN, HERDataset, DATA_BRAIN, TenxDataset
+from model import STMCL
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from utils import AvgMeter, get_lr
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--batch_size', type=int, default=128, help='')
-parser.add_argument('--max_epochs', type=int, default=30, help='')
+parser.add_argument('--max_epochs', type=int, default=90, help='')
 parser.add_argument('--fold', type=int, default=0, help='fold')
 parser.add_argument('--temperature', type=float, default=1., help='temperature')
 parser.add_argument('--dim', type=int, default=50, help='spot_embedding dimension (# HVGs)')  # 171, 785, 58, 50
@@ -80,9 +80,9 @@ def train(model, train_dataLoader, optimizer, epoch):
 
 
 def save_model(args, model, test_dataset=None, examples=0):
-    os.makedirs(f"./model_result_STco/{args.dataset}/{examples}", exist_ok=True)
+    os.makedirs(f"./model_result_STMCL/{args.dataset}/{examples}", exist_ok=True)
     torch.save(model.state_dict(),
-               f"./model_result_STco/{args.dataset}/{examples}/best_{args.fold}.pt")
+               f"./model_result_STMCL/{args.dataset}/{examples}/best_{args.fold}.pt")
 
 
 def main():
@@ -92,7 +92,7 @@ def main():
         print("当前fold:", args.fold)
         train_dataLoader, examples = load_data(args)
         # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        model = STco(spot_embedding=args.dim, temperature=args.temperature,
+        model = STMCL(spot_embedding=args.dim, temperature=args.temperature,
                      image_embedding=args.image_embedding_dim, projection_dim=args.projection_dim).cuda()
 
         optimizer = torch.optim.Adam(
