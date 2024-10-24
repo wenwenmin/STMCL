@@ -183,7 +183,7 @@ for fold in range(slice_num):
         spot_expression_pred[i, :] = np.average(expression_key[indices[i, :], :], axis=0,
                                                 weights=weights)
 
-    # np.save(save_path + f"spot_expression_pred_stco_{fold}_{names[fold]}.npy", spot_expression_pred.T)
+
     true = expression_gt
     pred = spot_expression_pred
 
@@ -195,10 +195,6 @@ for fold in range(slice_num):
 
     adata_pred.var_names = gene_list
     adata_ture.var_names = gene_list
-
-
-    # adata_ture.write(rf"./STco_pred_result/Brain/{names[fold]}_truth.h5ad")
-    # adata_pred.write(rf"./STco_pred_result/Brain/{names[fold]}_pred.h5ad")
 
     gene_mean_expression = np.mean(adata_ture.X, axis=0)
     top_50_genes_indices = np.argsort(gene_mean_expression)[::-1][:10]
