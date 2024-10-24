@@ -142,27 +142,8 @@ for i in patients:
     for j in reps:
         names.append(i + '_ST_' + j)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 heg_pcc_list = []
 hvg_pcc_list = []
-mse_list = []
-mae_list = []
 for fold in range(12):
 
     save_path = f"./pred_result/cscc_result_densenet_PE_att_layer2/embeddings_{fold}/"
@@ -207,29 +188,14 @@ for fold in range(12):
         matched_spot_embeddings_pred[i, :] = np.average(spot_key[indices[i, :], :], axis=0, weights=weights)
         matched_spot_expression_pred[i, :] = np.average(expression_key[indices[i, :], :], axis=0,
                                                         weights=weights)
-    #
-    #     # print("matched spot embeddings pred shape: ", matched_spot_embeddings_pred.shape)
-    #     # print("matched spot expression pred shape: ", matched_spot_expression_pred.shape)
-    # np.save(save_path + "matched_spot_expression_pred_mclSTExp.npy", matched_spot_expression_pred.T)
+
+
     true = expression_gt
     pred = matched_spot_expression_pred
-    # print(pred.shape)
-    # print(true.shape)
-    # print(np.max(pred))
-    # print(np.max(true))
-    # print(np.min(pred))
-    # print(np.min(true))
-
 
     from sklearn.metrics import mean_squared_error, mean_absolute_error
 
     print(true.shape, pred.shape)
-    mse = mean_squared_error(true, pred)
-    mse_list.append(mse)
-    print("Mean Squared Error (MSE): ", mse)
-    mae = mean_absolute_error(true, pred)
-    mae_list.append(mae)
-    print("Mean Absolute Error (MAE): ", mae)
 
     gene_list_path = "D:\dataset\Her2st\data/skin_hvg_cut_1000.npy"
     gene_list = list(np.load(gene_list_path, allow_pickle=True))
@@ -248,7 +214,6 @@ for fold in range(12):
     heg_pcc, heg_p = get_R(top_50_genes_pred, top_50_genes_expression)
     hvg_pcc, hvg_p = get_R(adata_pred, adata_ture)
     hvg_pcc = hvg_pcc[~np.isnan(hvg_pcc)]
-    # np.savetxt(rf"D:\result\Ours\mclSTExp/corr_{names[fold]}.csv", hvg_pcc, delimiter=',')
 
     heg_pcc_list.append(np.mean(heg_pcc))
     hvg_pcc_list.append(np.mean(hvg_pcc))
@@ -259,5 +224,4 @@ for fold in range(12):
 
 print(f"avg heg pcc: {np.mean(heg_pcc_list):.4f}")
 print(f"avg hvg pcc: {np.mean(hvg_pcc_list):.4f}")
-print(f"Mean Squared Error (MSE): {np.mean(mse_list):.4f}")
-print(f"Mean Absolute Error (MAE): {np.mean(mae_list):.4f}")
+
