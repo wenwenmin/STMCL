@@ -16,14 +16,11 @@ from anndata import AnnData
 from matplotlib.image import imread
 import scprep as scp
 
-# only need to run once to save hvg_matrix.npy
-# filter expression matrices to only include HVGs shared across all datasets
+
 
 
 def hvg_selection_and_pooling(exp_paths, samp_names, n_top_genes=1000):
-    # input n expression matrices paths, output n expression matrices with only the union of the HVGs
-
-    # read adata and find hvgs
+    
     hvg_bools = []
     for d in exp_paths:
         adata = sio.mmread(d)
@@ -156,13 +153,9 @@ def adata_hvg_selection_and_pooling(adata_list, n_top_genes=1000):
                 pd.read_csv(f"D:\dataset\Alex_NatGen/{adata.uns['library_id']}/filtered_count_matrix/barcodes.tsv.gz",
                             sep="\t",
                             header=None)[0].tolist()
-        # elif adata.uns['library_id'] in samps2:
-        #     index = \
-        #         pd.read_csv(
-        #             rf"D:\dataset\10xGenomics/{adata.uns['library_id']}/filtered_feature_bc_matrix/barcodes.tsv.gz",
-        #             sep="\t", header=None)[0].tolist()
+    
         adata = adata[index].copy()
-        # Subset to shared genes
+        
         adata = adata[:, shared]
         print(adata.shape)
         # Preprocess the data
@@ -176,16 +169,6 @@ def adata_hvg_selection_and_pooling(adata_list, n_top_genes=1000):
 
 
     gene_list = np.load('D:\dataset\Alex_NatGen/common_hvgs.npy', allow_pickle=True)
-    # with open('hvgs_intersection6.pickle', 'wb') as handle:
-    #     pickle.dump(hvg_intersection, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    # with open('hvgs_union.pickle6', 'wb') as handle:
-    #     pickle.dump(hvg_union, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    #
-    # # Add all the markers
-    # with open(r'D:\spatial_transcriptomics\DeepHis2Exp\src\scripts\Benchmarking_Figure1\1000hvg_common.pkl', 'rb') as f:
-    #     gene_list = pickle.load(f).to_list()
-
-    # hvg_union[gene_list] = True
 
     filtered_exp_mtxs = []
     for adata in adata_list:
@@ -195,26 +178,19 @@ def adata_hvg_selection_and_pooling(adata_list, n_top_genes=1000):
             index = \
             pd.read_csv(f"D:\dataset\Alex_NatGen/{adata.uns['library_id']}/filtered_count_matrix/barcodes.tsv.gz",
                         sep="\t", header=None)[0].tolist()
-        # elif adata.uns['library_id'] in samps2:
-        #     index = \
-        #     pd.read_csv(rf"D:\dataset\10xGenomics/{adata.uns['library_id']}/filtered_feature_bc_matrix/barcodes.tsv.gz",
-        #                 sep="\t", header=None)[0].tolist()
+        
         adata = adata[index].copy()
-        # Subset to shared genes
-        # adata = adata[:, shared]
         filtered_exp_mtxs.append(adata[:, gene_list].X.T.toarray())
     return filtered_exp_mtxs
 
 
 samps1 = ["1142243F", "CID4290", "CID4465", "CID44971", "CID4535", "1160920F"]
-# samps2 = ["block1", "block2", "FFPE"]
 
-samps = samps1 #+ samps2
-paths1 = [f"D:\dataset\Alex_NatGen/{samp}"
-          for samp in samps1]
+samps = samps1
+
+paths1 = [f"D:\dataset\Alex_NatGen/{samp}" for samp in samps1]
 adata_list1 = [read_visium_alex(path) for path in paths1]
-# adata_list2 = [read_visium(rf"D:\dataset\10xGenomics/{samp}") for samp in samps2]
-adata_list = adata_list1 #+ adata_list2
+adata_list = adata_list1
 for i, adata in enumerate(adata_list):
     adata.uns['library_id'] = samps[i]
 
