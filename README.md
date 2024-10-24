@@ -3,7 +3,7 @@
 In this paper, we propose STMCL, an innovative multimodal deep learning approach that utilizes a contrastive learning framework to accurately predict spatial gene expression profiles. STMCL effectively integrates multimodal data, including histological images, gene expression profiles of individual spots, precise spatial coordinates, and gene expression data. We evaluated STMCL using four publicly available spatial transcriptomics datasets.
 The experimental results indicate that our method surpasses existing methods in accurately predicting gene expression profiles from histological images. Additionally, it exhibits significant advantages in interpreting highly expressed genes specific to cancer and detecting particular spatial domains.
 
-![(Variational)](workflow.png)
+![(Variational)](Fig1.png)
 
 ## System environment
 Required package:
