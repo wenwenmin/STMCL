@@ -12,7 +12,7 @@ Required package:
 - python >=3.9
 
 ## Datasets
-Four publicly available ST datasets were used in this study. You can download them from https://zenodo.org/records/13117873 or find them on the following websites：
+Four publicly available ST datasets were used in this study. You can find them on the following websites：
 -  human HER2-positive breast tumor ST data from https://github.com/almaan/her2st/.
 -  human cutaneous squamous cell carcinoma 10x Visium data from GSE144240.
 -  dorsolateral prefrontal cortex (DLPFC) dataset from spatialLIBD package (http://spatial.libd.org/spatialLIBD).
